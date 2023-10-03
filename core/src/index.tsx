@@ -102,6 +102,14 @@ export default React.forwardRef<MarkdownPreviewRef, MarkdownPreviewProps>((props
   }
   const remarkPlugins = [...(other.remarkPlugins || []), gfm];
   const wrapperProps = { ...warpperElement, ...wrapperElement };
+
+  const components = {
+    li: ({node, ...props}) => {
+      const number = node.position.start.offset;
+      return <li>{number}. {props.children}</li>;
+    }
+  };
+
   return (
     <div ref={mdp} onScroll={onScroll} onMouseOver={onMouseOver} {...wrapperProps} className={cls} style={style}>
       <ReactMarkdown
@@ -111,6 +119,7 @@ export default React.forwardRef<MarkdownPreviewRef, MarkdownPreviewProps>((props
         rehypePlugins={pluginsFilter ? pluginsFilter('rehype', rehypePlugins) : rehypePlugins}
         remarkPlugins={pluginsFilter ? pluginsFilter('remark', remarkPlugins) : remarkPlugins}
         children={source || ''}
+        components={components}
       />
     </div>
   );
